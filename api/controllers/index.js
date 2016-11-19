@@ -193,6 +193,56 @@ module.exports = function(router) {
                     message: 'OK',
                     data: unitPrice
                 });
+            }).catch(function(err) {
+                return res.status(400).json({
+                    message: "QUERY FAILED",
+                    errors: err
+                });
+            });
+    }).all(badVerb);
+
+    // NEEDS TO BE OPTIMIZED
+    router.route('/getAvgPerformance/:dc').get((req, res, next) => {
+        var q = req.query;
+        if (!q.from) {
+            q.from = FIRST
+        }
+
+        if (!q.to) {
+            q.to = LAST
+        }
+
+        var query = 'http://localhost:8000/performance?dc=' + req.params.dc + '&id=ALL' + '&to=' + q.to + '&from=' + q.from;
+        var options = {
+            uri: query,
+            json: true
+        }
+
+        request(options)
+            .then(function(result) {
+                var dataPerformance = [];
+                var totalMean = 0,
+                    totalLag = 0,
+                    totalWarns = 0,
+                    num = 0;
+
+                result.data.forEach((item) => {
+                    totalMean += item.mean;
+                    totalLag += item.lag;
+                    totalWarns += item.warns;
+                    num++;
+                });
+
+                dataPerformance.push({
+                    'avgMean': totalMean / num,
+                    'avgLag': totalLag / num,
+                    'avgWarns': totalWarns / num
+                });
+            }).catch(function(err) {
+                return res.status(400).json({
+                    message: "QUERY FAILED",
+                    errors: err
+                });
             });
     }).all(badVerb);
 
