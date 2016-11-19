@@ -3,9 +3,10 @@ import { render } from 'react-dom'
 import { Router, Route } from 'react-router'
 import createBrowserHistory from 'history/lib/createBrowserHistory'
 
-import App from 'components/App'
-import Servers from 'components/Servers'
-import UnitImpressions from 'components/UnitImpressions'
+import Dashboard from './pages/Dashboard'
+import Presentation from './pages/Presentation'
+import Servers from './pages/Servers'
+import UnitImpressions from './pages/UnitImpressions'
 
 let routes =
   <Router
@@ -13,7 +14,12 @@ let routes =
   >
     <Route
       path = "/"
-      component = { App }
+      component = { Dashboard }
+    />
+
+    <Route
+      path = "/presentation"
+      component = { Presentation }
     />
 
     <Route

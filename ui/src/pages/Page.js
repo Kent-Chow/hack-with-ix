@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 
-import Navbar from './Navbar'
-import Banner from './Banner'
-import configs from './configs'
-import Body from './Body'
-import GetStarted from './GetStarted'
+import { Flex, Box } from 'reflexbox'
 
+import Navbar from '../components/Navbar'
+import configs from '../components/configs'
 
-class App extends Component {
+class Page extends Component {
   static childContextTypes = {
     rebass: React.PropTypes.object
   }
@@ -19,7 +17,6 @@ class App extends Component {
   }
 
   render() {
-
     // Design config values
     const {
       fontFamily,
@@ -29,7 +26,7 @@ class App extends Component {
       backgroundColor
     } = configs.rebass;
 
-    // App style
+    // Page style
     const style = {
       fontFamily,
       fontWeight,
@@ -39,15 +36,12 @@ class App extends Component {
     };
 
     return (
-      <div className="App" style={style}>
+      <div className="Page" style={style}>
         <Navbar />
-        <Banner />
-        <GetStarted />
-        <Body />
-
+        {this.props.children}
       </div>
     );
   }
 }
 
-export default App;
+export default Page;
