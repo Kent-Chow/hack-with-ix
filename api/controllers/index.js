@@ -246,5 +246,49 @@ module.exports = function(router) {
             });
     }).all(badVerb);
 
-    router.route('/')
+    router.route('/serverHealth').get((req, res, next) => {
+        var options = {
+            uri: 'http://localhost:8000/servers',
+            json: true
+        };
+
+        request(options)
+            .then((result) => {
+                var dataHealth = [];
+                result.data.forEach((item) => {
+                    var healthItem = {};
+                    for (var i in dataHealth) {
+                        if (dataHealth[i]['dc'] == item.dc) {
+                            healthItem = dataHealth[i];
+                            break;
+                        }
+                    }
+
+                    var input = {
+                        'id': item.id,
+                        'status': item.status
+                    };
+
+                    if (Object.keys(healthItem) == 0) {
+                        dataHealth.push({
+                            'dc': item.dc,
+                            'health': [input]
+                        });
+                    } else {
+                        healthItem.health.push(input);
+                    }
+
+                });
+                
+                res.json({
+                    message: 'OK',
+                    data: dataHealth
+                });
+            }).catch(function(err) {
+                return res.status(400).json({
+                    message: "QUERY FAILED",
+                    errors: err
+                });
+            });
+    }).all(badVerb);
 };
