@@ -9,6 +9,7 @@ var data    = require('../data/data.json'),
 // byDate returns a filter function
 // that can be used to filter a list of objects with `.timestamp` attributes
 function byDate(from, to) {
+    var now  = Date.now();
     return (data) => {
         return data.timestamp >= from
             && data.timestamp <= to
