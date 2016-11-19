@@ -238,6 +238,11 @@ module.exports = function(router) {
                     'avgLag': totalLag / num,
                     'avgWarns': totalWarns / num
                 });
+
+                res.json({
+                    message: 'OK',
+                    data: dataPerformance
+                });
             }).catch(function(err) {
                 return res.status(400).json({
                     message: "QUERY FAILED",
@@ -279,7 +284,7 @@ module.exports = function(router) {
                     }
 
                 });
-                
+
                 res.json({
                     message: 'OK',
                     data: dataHealth
