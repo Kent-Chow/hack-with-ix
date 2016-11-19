@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash'
 
 import { Flex, Box } from 'reflexbox'
-import { Container, Heading } from 'rebass'
+import { Container, Heading, Space } from 'rebass'
 
 import Page from './Page'
 import DatacenterOverview from '../components/DatacenterOverview'
@@ -15,8 +15,11 @@ function getApiData(url) {
   .then((payload) => payload.data);
 }
 
-function getServers() {
-  return getApiData('http://localhost:8000/servers');
+function getDatacenters() {
+  return getApiData('http://localhost:8000/servers')
+  .then((servers) => {
+    return groupByDatacenter(servers);
+  });
 }
 
 function groupByDatacenter(servers) {
@@ -32,21 +35,40 @@ function groupByDatacenter(servers) {
   .value();
 }
 
+function Datacenters(props) {
+  const dcs = props.datacenters;
+  if(!dcs || dcs.length < 1) {
+    return <p>Loading ...</p>;
+  }
+
+  return <Flex>
+    {dcs.map((datacenter) => {
+      return <DatacenterOverview dc={datacenter.name} servers={datacenter.servers} />
+    })}
+  </Flex>
+}
+
+function Title(props) {
+  return <Flex align="center" justify="space-around">
+    <Heading style={{marginBottom: 20, marginTop: 30}} level={1}>{props.children}</Heading>
+  </Flex>
+}
+
 class App extends Component {
   constructor() {
     super();
 
     this.state = {
-      servers: null,
+      datacenters: null,
     };
-    this.loadServers();
+    this.loadDatacenters();
   }
 
-  loadServers() {
-    getServers()
-    .then((servers) => {
+  loadDatacenters() {
+    getDatacenters()
+    .then((datacenters) => {
       this.setState({
-        servers: groupByDatacenter(servers),
+        datacenters: datacenters,
       })
     })
   }
@@ -55,17 +77,14 @@ class App extends Component {
     return (
       <Page>
         <Container>
-          <Flex align="center" justify="space-around">
-            <Heading level={1}>Servers</Heading>
-          </Flex>
-            { !this.state.servers ?
-              <p>Loading ...</p> :
-              <Flex>
-                {this.state.servers.map((datacenter) => {
-                  return <DatacenterOverview dc={datacenter.name} servers={datacenter.servers} />
-                })}
-              </Flex>
-            }
+          <Title>Servers</Title>
+          <Datacenters datacenters={this.state.datacenters} />
+        </Container>
+        <Container>
+          <Title>Ads</Title>
+          {
+            // TODO
+          }
         </Container>
       </Page>
     );
