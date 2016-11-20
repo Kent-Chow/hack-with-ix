@@ -201,7 +201,7 @@ module.exports = function(router) {
             });
     }).all(badVerb);
 
-    // NEEDS TO BE OPTIMIZED
+    // Query for to and from date can be used.
     router.route('/getAvgPerformance/:dc').get((req, res, next) => {
         var q = req.query;
         if (!q.from) {
