@@ -14,17 +14,28 @@ const STATUS_COLORS = {
 
 function ServerStatus(props) {
     const color = STATUS_COLORS[props.server.status] || "grey";
-
-    return <div style={{
-        display: "inline-block",
-        backgroundColor: color,
-        minHeight: 15,
-        minWidth: 40,
-        maxHeight: 15,
-        maxWidth: 40,
-        margin: 10,
-        borderRadius: 3,
-    }} />
+    return <div>
+        <Flex>
+            <Box sm={8}>
+                <div style={{
+                    display: "inline-block",
+                    backgroundColor: color,
+                    minHeight: 15,
+                    minWidth: 40,
+                    maxHeight: 15,
+                    maxWidth: 40,
+                    margin: 10,
+                    borderRadius: 3,
+                }}/>
+            </Box>
+            <Flex auto flexColumn={true} justify="space-around" align="center">
+                <span style={{
+                    fontSize: 15,
+                    fontWeight: "bold",
+                }}>{props.server.id}</span>
+            </Flex>
+        </Flex>
+    </div>
 }
 
 function DatacenterOverview(props) {
